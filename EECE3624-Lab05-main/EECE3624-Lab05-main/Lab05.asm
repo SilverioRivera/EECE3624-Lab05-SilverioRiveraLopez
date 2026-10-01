@@ -23,9 +23,9 @@
 rjmp main					; allow reset to run this program
 
 .org 0x0004
-	rjmp ISRJoystickDownINT1
+	rjmp ISRJoystickUpnINT1
 .org 0x0008
-	rjmp ISRJoystickUpINT3
+	rjmp ISRJoystickDownINT3
 
 
 /**********
@@ -150,20 +150,20 @@ outer_loop2:
 * ISR code
 **********/
 .org 0x0200							; Load the ISR code higher than main code
-ISRJoystickDownINT1:							; ISRJoystickDown
+ISRJoystickUpINT1:							; ISRJoystickDown
 	push r16						; Preserving register 16
 	in r16, SREG
 	push r16
 
 	cpi BlinkFreq,BlinkFreqMin
-	breq ISRJoystickDown
-	dec Blinkfreq
+	breq ISRJoystickUp
+	inc Blinkfreq
 	in R16, PORTC
 	andi R16, 0xF0
 	or R16, BlinkFreq
 	out PORTC, R16
 
-ISRJoystickDown:
+ISRJoystickUp:
 	pop r16
 	out SREG, r16
 	pop r16
@@ -171,21 +171,20 @@ ISRJoystickDown:
 
 
 
-ISRJoystickUpINT3:
+ISRJoystickDownINT3:
 	push r16
 	in r16, SREG
 	push r16
-
 	cpi BlinkFreq,BlinkFreqMax
-	breq ISRJoystickUp
-	inc BlinkFreq
+	breq ISRJoystickDown
+	dec BlinkFreq
 
 	in r16, PORTC
 	andi r16, 0xF0
 	or r16, BlinkFreq
 	out PORTC, r16
 
-ISRJoystickUp:
+ISRJoystickDown:
 	pop r16
 	out SREG, r16
 	pop r16

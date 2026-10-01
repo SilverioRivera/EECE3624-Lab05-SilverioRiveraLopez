@@ -8,7 +8,9 @@
  * Modified by: Silverio Rivera-Lopez
  * Modified on: 09/22/2026
  *
- * This program...
+ * This program blinks the "BOOT" LED(connected to PORTA.7) at a rate of 1-15 Hz, adjustable in 15
+ * steps, as the joystick is toggled up (faster) or down (slower), and that the blink rate
+ * is displayed in 4-bit binary on LEDs 0-3, which are connected to PORTC.0(LSB) through PORTC.3(MSB)
  *
  *************************************************************************/
 
@@ -20,12 +22,19 @@
                             ; (the location of the reset vector)
 rjmp main					; allow reset to run this program
 
+.org 0x0004
+	rjmp ISRJoystickDownINT1
+.org 0x0008
+	rjmp ISRJoystickUpINT3
+
+
 /**********
 * Main code
 **********/
 .def BlinkFreq = R20		; holds current blink rate (1-15 Hz)
+
 .equ BlinkFreqMin = 1
-.equ BlinkFreqMax = 4
+.equ BlinkFreqMax = 15
 .equ InitialBlinkFreq = BlinkFreqMin
 .def BOOTLED = R22
 .def UPDOWNJoystick = R23
@@ -38,27 +47,64 @@ main:                       ; jump here on reset
     out SPL, R16
 
 	/* Additional Setup before Main Loop */
+	ldi BlinkFreq, InitialBlinkFreq			; Added: BlinkFreq with value of 1-15 for 1 Hz blink rate
+	; Step 3
+	; the outputs for PORT A and PORT C
+	sbi DDRA, PA7 
+	sbi DDRC, PC0
+	sbi DDRC, PC1
+	sbi	DDRC, PC2
+	sbi DDRC, PC3
 
-	
-	LDI R21, (1<< INT1) & (1<<INT3)
+	; the inputs for PORT A
+	cbi DDRA, PA0
+	cbi DDRA, PA1
+	cbi DDRA, PA2
+	cbi DDRA, PA3
+	cbi DDRA, PA4
+	cbi DDRA, PA5
+	cbi DDRA, PA6
 
-    LDI R16,(1<<DDA7)		; Set the mask to make Port A.7 an output
-    OUT DDRA,R16			; Load bitmask to PORTA register
+	; the inputs for PORT C
+	cbi DDRC, PC4
+	cbi DDRC, PC5
+	cbi DDRC, PC6
+	cbi DDRC, PC7
 
-	LDI BOOTLED, (1<<DDA7)  
-	OUT DDRA, BOOTLED			; Set 7 as an output 
 
-	LDI R23, (0<<DDB1) & (0<<DDB3); Enabling the pins for 1 and 3
-	OUT DDRB, R23			; Setting Pin 1 and Pin 3 an input for DDDRB
+	; Lab Configuring Slide 
 
-	LDI R26, (0<<DDC3) & (0<<DDC2) & (0<<DDC1) & (0<<DDC0) ; Enabling PINS 3:0
-	OUT DDRC, R24			; PINS 3:0 set to outputs
+	; Configuring DDRB to set PIN1 and PIN3 as inputs
+	cbi DDRB, PB1
+	cbi DDRB, PB3
 
-	LDI R28, (0<<DDD1) & (0<<DDD3)  ; Enabling Pin 1 and 3 for DDRD
-	OUT DDRD, R28					; Pins 1 and 3 set to inputs for DDRD
+	; Configuring DDRD to set PIN1 and PIN3 as inputs
+	; DOWN and UP
+	cbi DDRD, PD1
+	cbi DDRD, PD3
 
-	SBI PORTB,1
-	SBI PORTB,3
+	; Configuring PORTB to set internal pulls up on PIN1 and PIN3
+	; they have define as inputs before hand
+	; DOWN and UP
+	; these are jumped to PD1 and PD3
+	sbi PORTB, PB1
+	sbi PORTB, PB3
+
+	; Set up the interrupt system
+	; The 3 steps for interrupts!!
+
+	; Configuring EICRA for INT1 and INT3 to RISING edge trigger
+	; When should it trigger?
+	ldi R16, (1<<ISC11)|(1<<ISC10)|(1<<ISC31)|(1<<ISC30)
+	sts EICRA, R16
+
+	; Configuring EIMSK for INT1 and INT3 to generate interrupts
+	; Which interrupts are enabled?
+	ldi R16, (1<<INT1)| (1<<INT3)
+	out EIMSK, R16
+
+	;Configuring SREG to enable interrupts GLOBALLY 
+	sei 
 
 	
 
@@ -69,10 +115,14 @@ mainLoop:
     CBI  PORTA, PORTA7       ; turn BOOT LED on (active low) by clearing PORTA.7
 
     ; kill some time
-    ldi R16, 40             ; R16 is outer loop counter
+    ldi R16, 16             ; R16 is outer loop counter
+	sub R16, BlinkFreq		; Modified: R16 set to 16 - BlinkFreq
+	 
+
+	
 outer_loop1:
-    ldi R24, low(0x4000)     ; load low and high parts of R25:R24 pair with
-    ldi R25, high(0x4000)    ; loop count by loading registers separately
+    ldi R24, low(0xFFFF)     ; load low and high parts of R25:R24 pair with (Modified value for 1 Hz blink rate)
+    ldi R25, high(0xFFFF)    ; loop count by loading registers separately	(Modified value for 1 Hz blink rate)
     inner_loop1:
         sbiw R24, 1         ; decrement inner loop counter (R25:R24 pair)
         brne inner_loop1    ; loop back if R25:R24 isn't zero
@@ -82,10 +132,12 @@ outer_loop1:
     sbi PORTA, PORTA7       ; turn BOOT LED off (active low) by setting PORTA.7
 
     ; kill some more time
-    ldi R16, 40             ; R16 is outer loop counter
+    ldi R16, 16             ; R16 is outer loop counter
+	sub R16, BlinkFreq      ; Modified: R16 set to 16 - BlinkFreq
+
 outer_loop2:
-    ldi R24, low(0x4000)     ; load low and high parts of R25:R24 pair with
-    ldi R25, high(0x4000)    ; loop count by loading registers separately
+    ldi R24, low(0xFFFF)     ; load low and high parts of R25:R24 pair with (Modified value for 1 Hz blink rate)
+    ldi R25, high(0xFFFF)    ; loop count by loading registers separately (Modified value for 1 Hz blink rate)
     inner_loop2:
         sbiw R24, 1         ; decrement inner loop counter (R25:R24 pair)
         brne inner_loop2    ; loop back if R25:R24 isn't zero
@@ -98,4 +150,43 @@ outer_loop2:
 * ISR code
 **********/
 .org 0x0200							; Load the ISR code higher than main code
-int1_isr:
+ISRJoystickDownINT1:							; ISRJoystickDown
+	push r16						; Preserving register 16
+	in r16, SREG
+	push r16
+
+	cpi BlinkFreq,BlinkFreqMin
+	breq ISRJoystickDown
+	dec Blinkfreq
+	in R16, PORTC
+	andi R16, 0xF0
+	or R16, BlinkFreq
+	out PORTC, R16
+
+ISRJoystickDown:
+	pop r16
+	out SREG, r16
+	pop r16
+	reti							; restores the saved PC and re-enables Global Interrupts
+
+
+
+ISRJoystickUpINT3:
+	push r16
+	in r16, SREG
+	push r16
+
+	cpi BlinkFreq,BlinkFreqMax
+	breq ISRJoystickUp
+	inc BlinkFreq
+
+	in r16, PORTC
+	andi r16, 0xF0
+	or r16, BlinkFreq
+	out PORTC, r16
+
+ISRJoystickUp:
+	pop r16
+	out SREG, r16
+	pop r16
+	reti

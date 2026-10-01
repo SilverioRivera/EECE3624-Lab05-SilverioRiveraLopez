@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\silve\OneDrive\Documents\EECE3624-Lab05-SilverioRiveraLopez\EECE3624-Lab05-main\EECE3624-Lab05-main\Lab05.asm Tue Sep 22 17:08:57 2026
+AVRASM ver. 2.2.8  C:\Users\silve\OneDrive\Documents\EECE3624-Lab05-SilverioRiveraLopez\EECE3624-Lab05-main\EECE3624-Lab05-main\Lab05.asm Wed Sep 30 22:28:55 2026
 
 
 EQU  SIGNATURE_000 0000001e
@@ -868,15 +868,18 @@ EQU  TWIaddr      00000042
 EQU  SPMRaddr     00000044
 EQU  INT_VECTORS_SIZE 00000046
 CSEG main         00000020
+CSEG ISRJoystickDownINT1 00000200
+CSEG ISRJoystickUpINT3 0000020e
 DEF  BlinkFreq    r20
 EQU  BlinkFreqMin 00000001
-EQU  BlinkFreqMax 00000004
+EQU  BlinkFreqMax 0000000f
 EQU  InitialBlinkFreq 00000001
 DEF  BOOTLED      r22
 DEF  UPDOWNJoystick r23
-CSEG mainLoop     00000030
-CSEG outer_loop1  00000032
-CSEG inner_loop1  00000034
-CSEG outer_loop2  0000003a
-CSEG inner_loop2  0000003c
-CSEG int1_isr     00000200
+CSEG mainLoop     00000041
+CSEG outer_loop1  00000044
+CSEG inner_loop1  00000046
+CSEG outer_loop2  0000004d
+CSEG inner_loop2  0000004f
+CSEG ISRJoystickDown 0000020a
+CSEG ISRJoystickUp 00000218

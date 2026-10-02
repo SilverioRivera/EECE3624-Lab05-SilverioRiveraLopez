@@ -23,14 +23,14 @@
  </OUTPUT_FILES>
  <LABELS>
   <main><FILE>C:\Users\silve\OneDrive\Documents\EECE3624-Lab05-SilverioRiveraLopez\EECE3624-Lab05-main\EECE3624-Lab05-main\Lab05.asm</FILE><LINE>43</LINE></main>
+  <ISRJoystickDownINT1><FILE>C:\Users\silve\OneDrive\Documents\EECE3624-Lab05-SilverioRiveraLopez\EECE3624-Lab05-main\EECE3624-Lab05-main\Lab05.asm</FILE><LINE>153</LINE></ISRJoystickDownINT1>
+  <ISRJoystickUpINT3><FILE>C:\Users\silve\OneDrive\Documents\EECE3624-Lab05-SilverioRiveraLopez\EECE3624-Lab05-main\EECE3624-Lab05-main\Lab05.asm</FILE><LINE>175</LINE></ISRJoystickUpINT3>
   <mainLoop><FILE>C:\Users\silve\OneDrive\Documents\EECE3624-Lab05-SilverioRiveraLopez\EECE3624-Lab05-main\EECE3624-Lab05-main\Lab05.asm</FILE><LINE>114</LINE></mainLoop>
   <outer_loop1><FILE>C:\Users\silve\OneDrive\Documents\EECE3624-Lab05-SilverioRiveraLopez\EECE3624-Lab05-main\EECE3624-Lab05-main\Lab05.asm</FILE><LINE>123</LINE></outer_loop1>
   <inner_loop1><FILE>C:\Users\silve\OneDrive\Documents\EECE3624-Lab05-SilverioRiveraLopez\EECE3624-Lab05-main\EECE3624-Lab05-main\Lab05.asm</FILE><LINE>126</LINE></inner_loop1>
   <outer_loop2><FILE>C:\Users\silve\OneDrive\Documents\EECE3624-Lab05-SilverioRiveraLopez\EECE3624-Lab05-main\EECE3624-Lab05-main\Lab05.asm</FILE><LINE>138</LINE></outer_loop2>
   <inner_loop2><FILE>C:\Users\silve\OneDrive\Documents\EECE3624-Lab05-SilverioRiveraLopez\EECE3624-Lab05-main\EECE3624-Lab05-main\Lab05.asm</FILE><LINE>141</LINE></inner_loop2>
-  <ISRJoystickUpINT1><FILE>C:\Users\silve\OneDrive\Documents\EECE3624-Lab05-SilverioRiveraLopez\EECE3624-Lab05-main\EECE3624-Lab05-main\Lab05.asm</FILE><LINE>153</LINE></ISRJoystickUpINT1>
-  <ISRJoystickUp><FILE>C:\Users\silve\OneDrive\Documents\EECE3624-Lab05-SilverioRiveraLopez\EECE3624-Lab05-main\EECE3624-Lab05-main\Lab05.asm</FILE><LINE>166</LINE></ISRJoystickUp>
-  <ISRJoystickDownINT3><FILE>C:\Users\silve\OneDrive\Documents\EECE3624-Lab05-SilverioRiveraLopez\EECE3624-Lab05-main\EECE3624-Lab05-main\Lab05.asm</FILE><LINE>174</LINE></ISRJoystickDownINT3>
-  <ISRJoystickDown><FILE>C:\Users\silve\OneDrive\Documents\EECE3624-Lab05-SilverioRiveraLopez\EECE3624-Lab05-main\EECE3624-Lab05-main\Lab05.asm</FILE><LINE>187</LINE></ISRJoystickDown>
+  <INT1done><FILE>C:\Users\silve\OneDrive\Documents\EECE3624-Lab05-SilverioRiveraLopez\EECE3624-Lab05-main\EECE3624-Lab05-main\Lab05.asm</FILE><LINE>169</LINE></INT1done>
+  <INT3done><FILE>C:\Users\silve\OneDrive\Documents\EECE3624-Lab05-SilverioRiveraLopez\EECE3624-Lab05-main\EECE3624-Lab05-main\Lab05.asm</FILE><LINE>191</LINE></INT3done>
  </LABELS>
 </ASSEMBLER_INFO>

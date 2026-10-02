@@ -23,9 +23,9 @@
 rjmp main					; allow reset to run this program
 
 .org 0x0004
-	rjmp ISRJoystickUpnINT1
+	rjmp ISRJoystickDownINT1
 .org 0x0008
-	rjmp ISRJoystickDownINT3
+	rjmp ISRJoystickUpINT3
 
 
 /**********
@@ -150,42 +150,47 @@ outer_loop2:
 * ISR code
 **********/
 .org 0x0200							; Load the ISR code higher than main code
-ISRJoystickUpINT1:							; ISRJoystickDown
+ISRJoystickDownINT1:							; ISRJoystickDown
 	push r16						; Preserving register 16
 	in r16, SREG
 	push r16
 
-	cpi BlinkFreq,BlinkFreqMin
-	breq ISRJoystickUp
-	inc Blinkfreq
-	in R16, PORTC
-	andi R16, 0xF0
-	or R16, BlinkFreq
-	out PORTC, R16
-
-ISRJoystickUp:
-	pop r16
-	out SREG, r16
-	pop r16
-	reti							; restores the saved PC and re-enables Global Interrupts
-
-
-
-ISRJoystickDownINT3:
-	push r16
-	in r16, SREG
-	push r16
-	cpi BlinkFreq,BlinkFreqMax
-	breq ISRJoystickDown
+	cpi BlinkFreq, BlinkFreqMin
+	breq INT1done
 	dec BlinkFreq
 
-	in r16, PORTC
-	andi r16, 0xF0
-	or r16, BlinkFreq
-	out PORTC, r16
+	mov R16, BlinkFreq
+	com R16
+	andi R16, 0x0F
+	out PORTC, R16 
 
-ISRJoystickDown:
+
+
+INT1done:
 	pop r16
 	out SREG, r16
 	pop r16
 	reti
+
+ISRJoystickUpINT3:							; ISRJoystickDown
+	push r16						; Preserving register 16
+	in r16, SREG
+	push r16
+
+	cpi BlinkFreq, BlinkFreqMax
+	breq INT3done
+	inc BlinkFreq
+
+	mov R16, BlinkFreq
+	com R16
+	andi R16, 0x0F
+	out PORTC, R16 
+
+
+
+INT3done:
+	pop r16
+	out SREG, r16
+	pop r16
+	reti
+

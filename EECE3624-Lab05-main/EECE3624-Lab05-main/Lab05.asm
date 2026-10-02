@@ -150,19 +150,19 @@ outer_loop2:
 * ISR code
 **********/
 .org 0x0200							; Load the ISR code higher than main code
-ISRJoystickDownINT1:							; ISRJoystickDown
+ISRJoystickDownINT1:				; ISRJoystickDown
 	push r16						; Preserving register 16
 	in r16, SREG
 	push r16
 
-	cpi BlinkFreq, BlinkFreqMin
-	breq INT1done
-	dec BlinkFreq
+	cpi BlinkFreq, BlinkFreqMin		; comparing current BlinkFreq to 1
+	breq INT1done					; if BlinkFreq has reach the end return
+	dec BlinkFreq					; BlinkFreq is higher than 1, decrement
 
-	mov R16, BlinkFreq
-	com R16
-	andi R16, 0x0F
-	out PORTC, R16 
+	mov R16, BlinkFreq				; store current BlinkFreq to R16 contents
+	com R16							; Flip all the bits for R16
+	andi R16, 0x0F					; Comparing bits of R16 to 0x0F for the last 4 bits
+	out PORTC, R16					; Send the last 4 bits to the LEDs
 
 
 
@@ -172,19 +172,19 @@ INT1done:
 	pop r16
 	reti
 
-ISRJoystickUpINT3:							; ISRJoystickDown
+ISRJoystickUpINT3:					; ISRJoystickDown
 	push r16						; Preserving register 16
 	in r16, SREG
 	push r16
 
-	cpi BlinkFreq, BlinkFreqMax
-	breq INT3done
-	inc BlinkFreq
+	cpi BlinkFreq, BlinkFreqMax		; Comparing current BlinkFreq to 15
+	breq INT3done					; if BlinkFreq has reach max freq return
+	inc BlinkFreq					; BlinkFreq is less than 15, increment
 
-	mov R16, BlinkFreq
-	com R16
-	andi R16, 0x0F
-	out PORTC, R16 
+	mov R16, BlinkFreq				; copy current BlinkFreq value into R16
+	com R16							; Flip all the bits 
+	andi R16, 0x0F					; Compare R16 bits with the last four bits of 0x0F
+	out PORTC, R16					; Send last 4 bits to the LEDs
 
 
 

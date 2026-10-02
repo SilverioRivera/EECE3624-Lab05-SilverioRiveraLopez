@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\silve\OneDrive\Documents\EECE3624-Lab05-SilverioRiveraLopez\EECE3624-Lab05-main\EECE3624-Lab05-main\Lab05.asm Fri Oct 02 12:20:38 2026
+AVRASM ver. 2.2.8  C:\Users\silve\OneDrive\Documents\EECE3624-Lab05-SilverioRiveraLopez\EECE3624-Lab05-main\EECE3624-Lab05-main\Lab05.asm Fri Oct 02 12:34:24 2026
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m128adef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m128adef.inc'
@@ -1374,19 +1374,19 @@ AVRASM ver. 2.2.8  C:\Users\silve\OneDrive\Documents\EECE3624-Lab05-SilverioRive
                                  * ISR code
                                  **********/
                                  .org 0x0200							; Load the ISR code higher than main code
-                                 ISRJoystickDownINT1:							; ISRJoystickDown
+                                 ISRJoystickDownINT1:				; ISRJoystickDown
 000200 930f                      	push r16						; Preserving register 16
 000201 b70f                      	in r16, SREG
 000202 930f                      	push r16
                                  
-000203 3041                      	cpi BlinkFreq, BlinkFreqMin
-000204 f029                      	breq INT1done
-000205 954a                      	dec BlinkFreq
+000203 3041                      	cpi BlinkFreq, BlinkFreqMin		; comparing current BlinkFreq to 1
+000204 f029                      	breq INT1done					; if BlinkFreq has reach the end return
+000205 954a                      	dec BlinkFreq					; BlinkFreq is higher than 1, decrement
                                  
-000206 2f04                      	mov R16, BlinkFreq
-000207 9500                      	com R16
-000208 700f                      	andi R16, 0x0F
-000209 bb05                      	out PORTC, R16 
+000206 2f04                      	mov R16, BlinkFreq				; store current BlinkFreq to R16 contents
+000207 9500                      	com R16							; Flip all the bits for R16
+000208 700f                      	andi R16, 0x0F					; Comparing bits of R16 to 0x0F for the last 4 bits
+000209 bb05                      	out PORTC, R16					; Send the last 4 bits to the LEDs
                                  
                                  
                                  
@@ -1396,19 +1396,19 @@ AVRASM ver. 2.2.8  C:\Users\silve\OneDrive\Documents\EECE3624-Lab05-SilverioRive
 00020c 910f                      	pop r16
 00020d 9518                      	reti
                                  
-                                 ISRJoystickUpINT3:							; ISRJoystickDown
+                                 ISRJoystickUpINT3:					; ISRJoystickDown
 00020e 930f                      	push r16						; Preserving register 16
 00020f b70f                      	in r16, SREG
 000210 930f                      	push r16
                                  
-000211 304f                      	cpi BlinkFreq, BlinkFreqMax
-000212 f029                      	breq INT3done
-000213 9543                      	inc BlinkFreq
+000211 304f                      	cpi BlinkFreq, BlinkFreqMax		; Comparing current BlinkFreq to 15
+000212 f029                      	breq INT3done					; if BlinkFreq has reach max freq return
+000213 9543                      	inc BlinkFreq					; BlinkFreq is less than 15, increment
                                  
-000214 2f04                      	mov R16, BlinkFreq
-000215 9500                      	com R16
-000216 700f                      	andi R16, 0x0F
-000217 bb05                      	out PORTC, R16 
+000214 2f04                      	mov R16, BlinkFreq				; copy current BlinkFreq value into R16
+000215 9500                      	com R16							; Flip all the bits 
+000216 700f                      	andi R16, 0x0F					; Compare R16 bits with the last four bits of 0x0F
+000217 bb05                      	out PORTC, R16					; Send last 4 bits to the LEDs
                                  
                                  
                                  
